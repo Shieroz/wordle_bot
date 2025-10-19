@@ -18,7 +18,7 @@ TOPLEFT_OFFSET = 10
 DEBUG = False
 LAST_MILE = False # If there are only a few valid answers left, let the user do it themselves
 N_LAST_MILE = 20
-MANUAL_MODE = True
+MANUAL_MODE = False
 
 WORD_LENGTH = 5
 TOTAL_GUESSES = 6
@@ -123,6 +123,7 @@ def manual_mode():
 
     if len(GUESSES) == TOTAL_GUESSES:
         print(f"Game over. Here are the remaining valid guesses:\n{answer_list}")
+    exit()
 
 if __name__=="__main__":
     # Update vocab from github and load into memory
@@ -142,9 +143,11 @@ if __name__=="__main__":
 
     if MANUAL_MODE:
         manual_mode()
-        exit()
 
-    guess_area = gui.locateOnScreen(GUESSES_PNG)
+    try:
+        guess_area = gui.locateOnScreen(GUESSES_PNG)
+    except Exception:
+        manual_mode()
     #keyboard_area = gui.locateOnScreen(KEYBOARD_PNG)
     print("Guess area: ", guess_area)
     #print("Keyboard area: ", keyboard_area)
@@ -207,14 +210,15 @@ if __name__=="__main__":
             
             i += 1
             
+            if len(answer_list) == 1:
+                print(f"Wordle completed! The word of the day is: {answer_list[0].upper()}")
+                exit()
+
             if not color:
                 i = 0
                 input("Something is blocking the game view. Please clear any obstruction and press any key to continue: ")
                 gui.moveTo(guess_area_x, guess_area_y)
                 gui.click()
-            if len(answer_list) == 1:
-                print(f"Wordle completed! The word of the day is: {answer_list[0].upper()}")
-                break
 
         if len(GUESSES) == TOTAL_GUESSES:
             print(f"Game over. Here are the remaining valid guesses:\n{answer_list}")
