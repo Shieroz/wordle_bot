@@ -1,0 +1,1 @@
+pyinstaller --onefile -w --icon=WordBot.ico --name="Wordle Bot" wordle_bot.py
