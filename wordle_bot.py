@@ -24,9 +24,6 @@ N_LAST_MILE = 20
 WORD_LENGTH = 5
 TOTAL_GUESSES = 6
 GUESSES = []
-ALLOW_LIST = []
-for i in range(WORD_LENGTH):
-    ALLOW_LIST.append(list(ascii_lowercase))
 # green/yellow  ->  (>=)  \
 # gray          ->  (<=)  _>--> (==)
 BOUNDS = {}
@@ -85,6 +82,13 @@ def update_answer(guess: str = "adieu", colors: List[int] = [0, 0, 0, 0, 0]) -> 
 
     guess = list(guess)
     GUESSES.append(guess)
+
+    # Since the bounds method still allows words with yellow characters at the same place
+    # This will eliminate all those occurrences
+    for i, char in enumerate(guess):
+        if colors[i] == 1:
+            answer_list = [word for word in answer_list if word[i] != char]
+
     combined = zip(guess, colors)
     combined = sorted(combined)
     guess_sorted, colors_sorted = zip(*combined)
